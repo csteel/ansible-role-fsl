@@ -1,7 +1,14 @@
-Role Name
-=========
+ansible-role-fsl
+================
 
-A brief description of the role goes here.
+**Planning stage , non functional at this time.**
+
+An Ansible role for installing and configuring fsl.
+
+Resources
+---------
+
+* [](files/recipe.md)
 
 Requirements
 ------------
