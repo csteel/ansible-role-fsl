@@ -1,0 +1,8 @@
+---
+# project playbook for roles/fsl
+
+- hosts: fsl
+  become: true
+  gather_facts: true
+  roles:
+    - fsl
