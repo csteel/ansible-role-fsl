@@ -1,2 +1,18 @@
 ---
 # defaults file for ansible-role-fsl
+
+# fsl installation state
+
+fsl_state         : present     # absent, present
+fsl_src_state     : absent      # absent, present
+
+fsl_users_group   : aceresearchers
+
+# fsl users id range
+
+fsl_uid_min       : 60000	# minimum (LDAP) User Id Number
+fsl_uid_max       : 65000     # maximum (LDAP) User Id Number
+
+
+
+
