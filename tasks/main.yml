@@ -6,6 +6,16 @@
 # sudo apt-get update
 # DEBIAN_FRONTEND=noninteractive DEBIAN_PRIORITY=critical apt-get -q -y -o "Dpkg::Options::=--force-confdef" -o "Dpkg::Options::=--force-confold" upgrade
 # sudo apt-get upgrade -y
+### install any utilities
+
+- name: "Install aptitude"
+  apt: >
+    update_cache=yes
+    name='{{ item }}'
+    state='{{ fsl_state }}'
+  with_items:
+    - aptitude
+  tags: [ 'packages', 'utilities' ]
 
 - name: "apt-get upgrade, keep old configs, use new config when no old config exists"
   apt:
@@ -100,7 +110,32 @@
   shell: >
     ls /home/users
   changed_when: false
-  register: local_user_home_dirs
+  register: users_in_home_users_dir
+  tags: ["test"]
 
-- debug: var=local_user_home_dirs
+- debug: var=users_in_home_users_dir
+  tags: ["test"]
+
+- name: "Capture users groups"
+  shell: >
+    id -G {{ item }}
+  changed_when: false
+  register: users_groups
+  with_items: users_in_home_users_dir.stdout_lines
+  tags: ["test"]
+
+- debug: var=users_groups
+  tags: ["test"]
+
+- name: Print test
+  debug:
+    msg="{{ item.item }} is a member of gid {{ fsl_users_gid }}"
+  register: group_members
+  when: "'{{ fsl_users_gid }}' in '{{ item.stdout }}'"
+  with_items: "{{ users_groups.results }}"
+  tags: ["test"]
+
+
+- debug: var=group_members
+  tags: ["test"]
 

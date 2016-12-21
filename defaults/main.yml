@@ -7,6 +7,7 @@ fsl_state         : present     # absent, present
 fsl_src_state     : absent      # absent, present
 
 fsl_users_group   : aceresearchers
+fsl_users_gid     : 80005
 
 # fsl users id range
 
