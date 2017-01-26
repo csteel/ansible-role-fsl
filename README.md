@@ -1,3 +1,4 @@
+
 ansible-role-fsl
 ================
 
@@ -5,10 +6,12 @@ ansible-role-fsl
 
 An Ansible role for installing and configuring fsl.
 
+
 Resources
 ---------
 
 * [](files/recipe.md)
+
 
 Requirements
 ------------
@@ -18,21 +21,52 @@ Any pre-requisites that may not be covered by Ansible itself or the role should 
 Role Variables
 --------------
 
-### roles/fsl/defaults
+### roles/fsl/defaults/main.yml
 
 ```yaml
+---
+# defaults file for ansible-role-fsl
 
+# fsl installation state
 
+fsl_state         : present     # absent, present
+fsl_src_state     : absent      # absent, present 
+
+fsl_users_group   : aceresearchers
+fsl_users_gid     : 80005
+
+# fsl users id range
+
+fsl_uid_min       : 60000	# minimum (LDAP) User Id Number
+fsl_uid_max       : 65000     # maximum (LDAP) User Id Number
+
+# key info
+
+#fsl_keyserver_url: hkp://pgp.mit.edu:80
+#fsl_key_id       : 0xA5D32F012649A5A9
+
+# dartmouth nh
+
+#deb http://neuro.debian.net/debian data main contrib non-free
+##deb-src http://neuro.debian.net/debian data main contrib non-free
+
+#deb http://neuro.debian.net/debian xenial main contrib non-free
+##deb-src http://neuro.debian.net/debian xenial main contrib non-free
+
+### ???
+
+#deb http://neurodebian.ovgu.de/debian data main contrib non-free
+##deb-src http://neurodebian.ovgu.de/debian data main contrib non-free
+
+#deb http://neurodebian.ovgu.de/debian {{ ansible_distribution_release }} main contrib non-free
+##deb-src http://neurodebian.ovgu.de/debian {{ ansible_distribution_release }} main contrib non-free
 
 ```
-
-
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
 
 Dependencies
 ------------
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+None at this time.
 
 Example Playbook
 ----------------
@@ -41,31 +75,40 @@ Example Playbook
 ### fsl.yml
 
 ```shell
-
+cd projectroot
 cp roles/fsl/files/fsl.yml fsl.yml
-
 ```
 
 ```yaml
 ---
-# fsl.yml # project playbook for roles/fsl
+# project playbook for roles/fsl
 
 - hosts: fsl
   become: true
   gather_facts: true
   roles:
     - fsl
-
 ```
 
-    - hosts: servers
+
+
+    - hosts: fsl
       roles:
-         - { role: username.rolename, x: 42 }
+         - { role: fsl, fsl_src_state: 'present' }
+
+## ansible-playbook
+
+```shell
+ansible-playbook -i inventory/dev systems.yml --limit "ace-ws-63" 
+```
+
+
 
 License
 -------
 
 BSD
+
 
 Author Information
 ------------------
