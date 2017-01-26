@@ -23,6 +23,7 @@
     cache_valid_time: 3600
     upgrade: 'yes'
     dpkg_options: 'force-confold,force-confdef'
+  when: fsl_state == 'present'
 
 # sudo apt-get dist-upgrade -y
 # DEBIAN_FRONTEND=noninteractive DEBIAN_PRIORITY=critical apt-get -q -y -o "Dpkg::Options::=--force-confdef" -o "Dpkg::Options::=--force-confold" dist-upgrade
@@ -33,28 +34,28 @@
     cache_valid_time: 3600
     upgrade: 'dist'
     dpkg_options: 'force-confold,force-confdef'
+  when: fsl_state == 'present'
 
 ### install any utilities
 
-- name: "Install test using using `curl`"
-  apt: >
-    update_cache=yes
-    name='{{ item }}'
-    state='{{ fsl_state }}'
-  with_items:
-    - curl
-  tags: [ 'packages', 'utilities' ]
+# this should work but does not!
+#- name: install apt-key for neurodebian
+#  apt: >
+#    update_cache=yes
+#    name='{{ item }}'
+#    state='{{ fsl_state }}'
 
-- apt_key:
-    id: 2649A5A9
-    keyserver: hkp://pgp.mit.edu:80
-    state: '{{ fsl_state }}'
+- name: install apt-key for neurodebian
+  apt_key: >
+    keyserver="hkp://pgp.mit.edu:80"
+    id="0xA5D32F012649A5A9"
+    state='{{ fsl_state }}'
 
 # Add specified repository into sources list using specified filename.
 
 - apt_repository:
     mode: 0420
-    repo: deb http://neurodebian.ovgu.de/debian data main contrib non-free
+    repo: deb http://neuro.debian.net/debian data main contrib non-free
     state: '{{ fsl_state }}'
     update_cache: yes
     filename: 'neurodebian.sources.list'
@@ -62,30 +63,12 @@
 
 - apt_repository:
     mode: 0420
-    repo: deb-src http://neurodebian.ovgu.de/debian data main contrib non-free
-    state: '{{ fsl_src_state }}'
-    update_cache: yes
-    filename: 'neurodebian.sources.list'
-    update_cache: yes
-
-- apt_repository:
-    mode: 0420
-    repo: deb http://neurodebian.ovgu.de/debian {{ ansible_distribution_release }} main contrib non-free
+    repo: deb http://neuro.debian.net/debian {{ ansible_distribution_release }} main contrib non-free
     state: '{{ fsl_state }}'
     update_cache: yes
     filename: 'neurodebian.sources.list'
     update_cache: yes
   when: ansible_distribution == 'Ubuntu'
-
-- apt_repository:
-    mode: 0420
-    repo: deb-src http://neurodebian.ovgu.de/debian {{ ansible_distribution_release }} main contrib non-free
-    state: '{{ fsl_src_state }}'
-    update_cache: yes
-    filename: 'neurodebian.sources.list'
-    update_cache: yes
-  when: ansible_distribution == 'Ubuntu'                                              
-
 
 - name: "update apt cache"
   apt: >
@@ -95,7 +78,7 @@
 
 ## install fsl
 
-- name: "Install 'fsl'"
+- name: "Install (or remove) 'fsl'"
   apt: >
     update_cache=yes
     name='{{ item }}'
@@ -111,10 +94,13 @@
     ls /home/users
   changed_when: false
   register: users_in_home_users_dir
+  when: fsl_state == 'present'
+
   tags: ["test"]
 
 - debug: var=users_in_home_users_dir
   tags: ["test"]
+  when: fsl_state == 'present'
 
 - name: "Capture users groups"
   shell: >
@@ -122,9 +108,11 @@
   changed_when: false
   register: users_groups
   with_items: users_in_home_users_dir.stdout_lines
+  when: fsl_state == 'present'
   tags: ["test"]
 
 - debug: var=users_groups
+  when: fsl_state == 'present'
   tags: ["test"]
 
 - name: Print test
@@ -133,9 +121,10 @@
   register: group_members
   when: "'{{ fsl_users_gid }}' in '{{ item.stdout }}'"
   with_items: "{{ users_groups.results }}"
+  when: fsl_state == 'present'
   tags: ["test"]
 
-
 - debug: var=group_members
+  when: fsl_state == 'present'
   tags: ["test"]
 

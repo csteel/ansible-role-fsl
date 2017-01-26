@@ -14,6 +14,26 @@ fsl_users_gid     : 80005
 fsl_uid_min       : 60000	# minimum (LDAP) User Id Number
 fsl_uid_max       : 65000     # maximum (LDAP) User Id Number
 
+# key info
+
+#fsl_keyserver_url: hkp://pgp.mit.edu:80
+#fsl_key_id       : 0xA5D32F012649A5A9
+
+# dartmouth nh
+
+#deb http://neuro.debian.net/debian data main contrib non-free
+##deb-src http://neuro.debian.net/debian data main contrib non-free
+
+#deb http://neuro.debian.net/debian xenial main contrib non-free
+##deb-src http://neuro.debian.net/debian xenial main contrib non-free
+
+### ???
+
+#deb http://neurodebian.ovgu.de/debian data main contrib non-free
+##deb-src http://neurodebian.ovgu.de/debian data main contrib non-free
+
+#deb http://neurodebian.ovgu.de/debian {{ ansible_distribution_release }} main contrib non-free
+##deb-src http://neurodebian.ovgu.de/debian {{ ansible_distribution_release }} main contrib non-free
 
 
 
