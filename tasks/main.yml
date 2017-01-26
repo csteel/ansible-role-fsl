@@ -52,21 +52,23 @@
     state='{{ fsl_state }}'
 
 # Add specified repository into sources list using specified filename.
+#
+# is this really idempotent?
 
 - apt_repository:
-    mode: 0420
+    mode: 0644
     repo: deb http://neuro.debian.net/debian data main contrib non-free
     state: '{{ fsl_state }}'
     update_cache: yes
-    filename: 'neurodebian.sources.list'
+    filename: 'neurodebian.sources' # .list is appended by the module
     update_cache: yes
 
 - apt_repository:
-    mode: 0420
+    mode: 0644
     repo: deb http://neuro.debian.net/debian {{ ansible_distribution_release }} main contrib non-free
     state: '{{ fsl_state }}'
     update_cache: yes
-    filename: 'neurodebian.sources.list'
+    filename: 'neurodebian.sources'
     update_cache: yes
   when: ansible_distribution == 'Ubuntu'
 
