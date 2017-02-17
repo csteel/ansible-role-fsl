@@ -10,7 +10,7 @@
 
 - name: "Install aptitude"
   apt: >
-    update_cache=yes
+    update_cache=true
     name='{{ item }}'
     state='{{ fsl_state }}'
   with_items:
@@ -19,8 +19,6 @@
 
 - name: "apt-get upgrade, keep old configs, use new config when no old config exists"
   apt:
-    update_cache: yes
-    cache_valid_time: 3600
     upgrade: 'yes'
     dpkg_options: 'force-confold,force-confdef'
   when: fsl_state == 'present'
@@ -30,20 +28,10 @@
 
 - name: "apt-get dist-upgrade, keep old configs, use new config when no old config exists" 
   apt:
-    update_cache: yes
-    cache_valid_time: 3600
+    update_cache: true
     upgrade: 'dist'
     dpkg_options: 'force-confold,force-confdef'
   when: fsl_state == 'present'
-
-### install any utilities
-
-# this should work but does not!
-#- name: install apt-key for neurodebian
-#  apt: >
-#    update_cache=yes
-#    name='{{ item }}'
-#    state='{{ fsl_state }}'
 
 - name: install apt-key for neurodebian
   apt_key: >
@@ -59,7 +47,6 @@
     mode: 0644
     repo: deb http://neuro.debian.net/debian data main contrib non-free
     state: '{{ fsl_state }}'
-    update_cache: yes
     filename: 'neurodebian.sources' # .list is appended by the module
     update_cache: yes
 
@@ -69,12 +56,11 @@
     state: '{{ fsl_state }}'
     update_cache: yes
     filename: 'neurodebian.sources'
-    update_cache: yes
   when: ansible_distribution == 'Ubuntu'
 
 - name: "update apt cache"
   apt: >
-    update_cache=yes
+    update_cache=true
     cache_valid_time=43200
   tags: [ 'packages' ]
 
@@ -82,7 +68,6 @@
 
 - name: "Install (or remove) 'fsl'"
   apt: >
-    update_cache=yes
     name='{{ item }}'
     state='{{ fsl_state }}'
   with_items:
@@ -90,43 +75,4 @@
   tags: [ 'packages', 'utilities' ]
 
 ## Users configruation
-
-- name: "get remote systems users by UID range"
-  shell: >
-    ls /home/users
-  changed_when: false
-  register: users_in_home_users_dir
-  when: fsl_state == 'present'
-
-  tags: ["test"]
-
-- debug: var=users_in_home_users_dir
-  tags: ["test"]
-  when: fsl_state == 'present'
-
-- name: "Capture users groups"
-  shell: >
-    id -G {{ item }}
-  changed_when: false
-  register: users_groups
-  with_items: users_in_home_users_dir.stdout_lines
-  when: fsl_state == 'present'
-  tags: ["test"]
-
-- debug: var=users_groups
-  when: fsl_state == 'present'
-  tags: ["test"]
-
-- name: Print test
-  debug:
-    msg="{{ item.item }} is a member of gid {{ fsl_users_gid }}"
-  register: group_members
-  when: "'{{ fsl_users_gid }}' in '{{ item.stdout }}'"
-  with_items: "{{ users_groups.results }}"
-  when: fsl_state == 'present'
-  tags: ["test"]
-
-- debug: var=group_members
-  when: fsl_state == 'present'
-  tags: ["test"]
 
