@@ -13,10 +13,33 @@ Resources
 * [](files/recipe.md)
 
 
+
 Requirements
 ------------
 
 Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+
+### ssh agent
+
+```shell
+eval `ssh-agent -s`
+/usr/bin/ssh-add
+```
+
+### remove stale ssh keys
+
+```shell
+ssh-keygen -f "/home/ansible/.ssh/known_hosts" -R workstation-001
+ssh-keygen -f "/home/ansible/.ssh/known_hosts" -R 144.222.111.11
+```
+
+### ensure for connectivity
+
+Can we connect using ssh keypairs? 
+
+```shell
+ssh workstation-001
+```
 
 Role Variables
 --------------
@@ -63,10 +86,12 @@ fsl_uid_max       : 65000     # maximum (LDAP) User Id Number
 
 ```
 
+
 Dependencies
 ------------
 
 None at this time.
+
 
 Example Playbook
 ----------------
@@ -101,7 +126,6 @@ cp roles/fsl/files/fsl.yml fsl.yml
 ```shell
 ansible-playbook -i inventory/dev systems.yml --limit "ace-ws-63" 
 ```
-
 
 
 License
