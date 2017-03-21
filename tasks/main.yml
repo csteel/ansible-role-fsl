@@ -1,12 +1,11 @@
 ---
-# tasks file for ansible-role-fsl
-
-## prepare base OS
+# file: fsl/tasks/main.yml
 
 # sudo apt-get update
 # DEBIAN_FRONTEND=noninteractive DEBIAN_PRIORITY=critical apt-get -q -y -o "Dpkg::Options::=--force-confdef" -o "Dpkg::Options::=--force-confold" upgrade
 # sudo apt-get upgrade -y
-### install any utilities
+
+## install any utilities
 
 - name: "Install aptitude"
   apt: >
@@ -17,13 +16,16 @@
     - aptitude
   tags: [ 'packages', 'utilities' ]
 
+## upgrade
+
 - name: "apt-get upgrade, keep old configs, use new config when no old config exists"
   apt:
     upgrade: 'yes'
     dpkg_options: 'force-confold,force-confdef'
   when: fsl_state == 'present'
 
-# sudo apt-get dist-upgrade -y
+## dist-upgrade
+
 # DEBIAN_FRONTEND=noninteractive DEBIAN_PRIORITY=critical apt-get -q -y -o "Dpkg::Options::=--force-confdef" -o "Dpkg::Options::=--force-confold" dist-upgrade
 
 - name: "apt-get dist-upgrade, keep old configs, use new config when no old config exists" 
@@ -32,6 +34,8 @@
     upgrade: 'dist'
     dpkg_options: 'force-confold,force-confdef'
   when: fsl_state == 'present'
+
+## Add Neurodebian
 
 - name: install apt-key for neurodebian
   apt_key: >
