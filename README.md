@@ -2,17 +2,27 @@
 ansible-role-fsl
 ================
 
-**Planning stage , non functional at this time.**
-
 An Ansible role for installing and configuring fsl.
+
+## Description
+
+"FSL is a comprehensive library of analysis tools for FMRI, MRI and DTI brain imaging data. It runs on Apple and PCs (both Linux, and Windows via a Virtual Machine), and is very easy to install. Most of the tools can be run both from the command line and as GUIs ("point-and-click" graphical user interfaces)." - [ FSL Home - FMRIB Software Library v5.0 ]( http://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FSL )
 
 
 Resources
 ---------
 
-* [](files/recipe.md)
+### Installation
 
+-   [](files/recipe.md)
+-   [ FSL Installation ]( http://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FslInstallation )
+- [ Oxford - FSL - FMRIB Software Library v5.0 - Download ]( http://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FSL )
+- [ Debian README.Debian - Setup Instructions ]( http://neuro.debian.net/debian/extracts/fsl/README.Debian )
 
+### General
+
+- [ The Debian Free Software Guidelines (DFSG) ]( https://www.debian.org/social_contract#guidelines )
+- [ FSL Licence ]( http://fsl.fmrib.ox.ac.uk/fsl/fslwiki/Licence )
 
 Requirements
 ------------
@@ -40,6 +50,15 @@ Can we connect using ssh keypairs?
 ```shell
 ssh workstation-001
 ```
+
+### Itegration options (other Debian Packages)
+
+(Not implemented with this role at this time)
+
+- Octave
+- Sun Grid Engine (SGE)
+- Condor
+
 
 Role Variables
 --------------
