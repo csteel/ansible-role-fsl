@@ -16,13 +16,15 @@ Resources
 
 -   [](files/recipe.md)
 -   [ FSL Installation ]( http://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FslInstallation )
-- [ Oxford - FSL - FMRIB Software Library v5.0 - Download ]( http://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FSL )
-- [ Debian README.Debian - Setup Instructions ]( http://neuro.debian.net/debian/extracts/fsl/README.Debian )
+-   [ Oxford - FSL - FMRIB Software Library v5.0 - Download ]( http://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FSL )
+-   [ Debian README.Debian - Setup Instructions ]( http://neuro.debian.net/debian/extracts/fsl/README.Debian )
 
 ### General
 
 - [ The Debian Free Software Guidelines (DFSG) ]( https://www.debian.org/social_contract#guidelines )
 - [ FSL Licence ]( http://fsl.fmrib.ox.ac.uk/fsl/fslwiki/Licence )
+
+
 
 Requirements
 ------------
@@ -58,6 +60,7 @@ ssh workstation-001
 - Octave
 - Sun Grid Engine (SGE)
 - Condor
+
 
 
 Role Variables
@@ -102,7 +105,6 @@ fsl_uid_max       : 65000     # maximum (LDAP) User Id Number
 
 #deb http://neurodebian.ovgu.de/debian {{ ansible_distribution_release }} main contrib non-free
 ##deb-src http://neurodebian.ovgu.de/debian {{ ansible_distribution_release }} main contrib non-free
-
 ```
 
 
@@ -125,12 +127,21 @@ cp roles/fsl/files/fsl.yml fsl.yml
 
 ```yaml
 ---
-# project playbook for roles/fsl
+# file: {{ ansible_project }}/fsl.yml
 
 - hosts: fsl
   become: true
   gather_facts: true
+  pre_tasks:
+
+    - set_fact: fact_controller_user="{{ lookup('env','USER') }}"
+    - debug: var=fact_controller_user
+
+    - set_fact: fact_controller_home="{{ lookup('env','HOME') }}"
+    - debug: var=fact_controller_home
+
   roles:
+
     - fsl
 ```
 
@@ -146,14 +157,74 @@ cp roles/fsl/files/fsl.yml fsl.yml
 ansible-playbook -i inventory/dev systems.yml --limit "ace-ws-63" 
 ```
 
+## Testing
 
-License
--------
+```shell
+vagrant up
+```
 
-BSD
+Connect to vagrant host using X forwarding for testing...
 
+```shell
+vagrant ssh -- -X
+```
 
-Author Information
-------------------
+```shell
+sudo cat /etc/skel/.profile
+. /etc/fsl/5.0/fsl.sh
+echo $PATH
+```
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+```shell
+/usr/lib/fsl/5.0:/home/ansible/bin:/home/ansible/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+which fsl
+```
+
+```shell
+/usr/lib/fsl/5.0/fsl
+```
+
+### Environment
+
+Test that the environment and command line tools are set up correctly: 
+
+```
+echo $FSLDIR
+```
+
+Output example:
+
+```shell
+/usr/share/fsl/5.0
+```
+
+### Path
+
+Check your path: 
+
+```shell
+flirt -version
+```
+
+Output example:
+
+```shell
+FLIRT version 6.0
+```
+
+## License
+
+MIT
+
+## Author Information
+
+Christopher Steel
+Systems Administrator
+McGill Centre for Integrative Neuroscience
+Montreal Neurological Institute
+McGill University
+3801 University Street
+Montréal, QC, Canada H3A 2B4
+Tel. No. +1 514 398-2494
+E-mail: christopherDOTsteel@mcgill.ca
+[MCIN](http://mcin-cnim.ca/), [theneuro.ca](http://theneuro.ca)
