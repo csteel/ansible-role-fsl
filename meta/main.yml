@@ -11,6 +11,13 @@ dependencies:
     tags: ['minc', 'skel']
     skel_entries:
 
+      - name : "ensure for /etc/skel/.bashrc"
+        path : '/etc/skel/.bashrc'
+        src  : '{{ ants_bashrc_src_path }}'
+        force : no
+        state: "copy"
+
+
       - name: "Add mni-display path block to /setc/skel/.bashrc"
         type: 'blockinfile'    
         marker: '## {mark} ANSIBLE MANAGED BLOCK for FSL  '
