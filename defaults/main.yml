@@ -3,13 +3,19 @@
 
 # fsl installation state
 
-fsl_role_name          : 'fsl'
-fsl_version            : '5.0'
+fsl_reboot_target      : false       # not used at this time
+fsl_debug              : true        # not used at this time
+
+fsl_role_name          : 'fsl'       # not in use at this time
 fsl_state              : present     # absent, present
-fsl_install_type       : ''
-fsl_src_state          : absent      # absent, present
+fsl_version            : '5.0'
+fsl_version_pinning    : false       # not in use at this time
+
+fsl_remote_user        : 'NOTINUSE'   # not used at this time
+fsl_install_type       : 'apt'       # not used at this time
 fsl_bin_path           : '/etc/fsl/{{ fsl_version }}/fsl.sh'
 fsl_profile_blank_path : 'roles/{{ fsl_role_name }}/files/profile'
+
 
 #fsl_users_group   : aceresearchers
 #fsl_users_gid     : 80005

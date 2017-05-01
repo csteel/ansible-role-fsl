@@ -3,14 +3,30 @@
 - hosts: all
   remote_user: vagrant
   sudo: true
-  roles:
-    - ../../
+  pre_tasks:
+
+    - set_fact: fact_controller_user="{{ lookup('env','USER') }}"
+    - debug: var=fact_controller_user
+
+    - set_fact: fact_controller_home="{{ lookup('env','HOME') }}"
+    - debug: var=fact_controller_home
 
   vars:
 
-    - freesurfer_ver  : '1.0.2-2'
-    - freesurfer_arch : '{{ ansible_architecture }}'
-    - freesurfer_pkg  : 'libxp6_{{ freesurfer_ver }}_{{ freesurfer_arch }}.deb'
-    - freesurfer_deb_url  : 'http://mirrors.kernel.org/ubuntu/pool/main/libx/libxp/{{ freesurfer_pkg }}'
+    - fsl_reboot_target      : false       # not used at this time
+    - fsl_debug              : true        # not used at this time
+
+    - fsl_role_name          : 'fsl'       # not in use at this time
+    - fsl_state              : present     # absent, present
+    - fsl_version            : '5.0'
+    - fsl_version_pinning    : false       # not in use at this time
+
+    - fsl_remote_user        : 'NOTINUSE'   # not used at this time
+    - fsl_install_type       : 'apt'       # not used at this time
+    - fsl_bin_path           : '/etc/fsl/{{ fsl_version }}/fsl.sh'
+    - fsl_profile_blank_path : '../files/profile'
+
   
+  roles:
+    - ../../
 
