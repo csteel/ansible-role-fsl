@@ -11,16 +11,15 @@ dependencies:
     tags: ['minc', 'skel']
     skel_entries:
 
-      - name : "ensure for /etc/skel/.bashrc"
+      - name : "ensure for /etc/skel/.profile"
         path : '/etc/skel/.bashrc'
-        src  : '{{ ants_bashrc_src_path }}'
+        src  : '{{ fsl_profile_blank_path }}'
         force : no
         state: "copy"
 
-
-      - name: "Add mni-display path block to /setc/skel/.bashrc"
+      - name: "Add fsl .profile entry to /etc/skel/.profile"
         type: 'blockinfile'    
-        marker: '## {mark} ANSIBLE MANAGED BLOCK for FSL  '
+        marker: '## {mark} ANSIBLE MANAGED BLOCK for FSL .profile entry '
         path: "/etc/skel/.profile"
         insertafter: "EOF"
         block: |
