@@ -75,7 +75,7 @@
     name='{{ item }}'
     state='{{ fsl_state }}'
   with_items:
-    - fsl
+    - fsl-complete
   tags: [ 'packages', 'utilities' ]
 
 ## Users configruation
